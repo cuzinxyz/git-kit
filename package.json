@@ -1,0 +1,33 @@
+{
+  "name": "gk-dx",
+  "version": "0.1.0",
+  "description": "Short, colorful, developer-friendly git commands. A daily-driver kit for git.",
+  "keywords": [
+    "git",
+    "cli",
+    "developer-tools",
+    "productivity",
+    "git-commands"
+  ],
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "gk": "./bin/gk.js"
+  },
+  "main": "src/cli.js",
+  "files": [
+    "bin",
+    "src",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "picocolors": "^1.1.1"
+  }
+}
