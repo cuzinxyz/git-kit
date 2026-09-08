@@ -35,10 +35,15 @@ function register(program) {
 
   program
     .command("bdf")
-    .description("force-delete a branch")
+    .description("force-delete a branch (discards unmerged work)")
     .argument("<name>", "branch to delete")
-    .action((name) => {
+    .option("-y, --yes", "skip the confirmation prompt")
+    .action(async (name, opts) => {
       g.requireRepo();
+      if (!(await ui.confirmDestructive(opts, `This force-deletes "${name}", even if unmerged. Continue?`))) {
+        ui.hint("Aborted.");
+        return;
+      }
       g.run(["branch", "-D", name]);
     });
 

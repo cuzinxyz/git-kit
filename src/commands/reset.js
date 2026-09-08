@@ -1,14 +1,6 @@
 const ui = require("../ui");
 const g = require("../git");
 
-async function confirmDestructive(args, flag) {
-  if (flag) return true;
-  if (process.stdin.isTTY) {
-    return ui.confirm("This discards changes irreversibly. Continue?");
-  }
-  return false;
-}
-
 function register(program) {
   program
     .command("r")
@@ -25,7 +17,7 @@ function register(program) {
     .option("-y, --yes", "skip the confirmation prompt")
     .action(async (opts) => {
       g.requireRepo();
-      if (!(await confirmDestructive(opts, opts.yes))) {
+      if (!(await ui.confirmDestructive(opts, "This discards all uncommitted changes. Continue?"))) {
         ui.hint("Aborted.");
         return;
       }
@@ -39,7 +31,7 @@ function register(program) {
     .option("-y, --yes", "skip the confirmation prompt")
     .action(async (opts) => {
       g.requireRepo();
-      if (!(await confirmDestructive(opts, opts.yes))) {
+      if (!(await ui.confirmDestructive(opts, "This discards the last commit and its changes. Continue?"))) {
         ui.hint("Aborted.");
         return;
       }
@@ -53,7 +45,7 @@ function register(program) {
     .option("-y, --yes", "skip the confirmation prompt")
     .action(async (opts) => {
       g.requireRepo();
-      if (!(await confirmDestructive(opts, opts.yes))) {
+      if (!(await ui.confirmDestructive(opts, "This deletes all untracked files/dirs. Continue?"))) {
         ui.hint("Aborted.");
         return;
       }

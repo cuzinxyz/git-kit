@@ -28,8 +28,13 @@ function register(program) {
   program
     .command("pf")
     .description("push --force-with-lease (safe force push)")
-    .action(() => {
+    .option("-y, --yes", "skip the confirmation prompt")
+    .action(async (opts) => {
       g.requireRepo();
+      if (!(await ui.confirmDestructive(opts, "This force-pushes and can overwrite remote history. Continue?"))) {
+        ui.hint("Aborted.");
+        return;
+      }
       g.run(["push", "--force-with-lease"]);
     });
 

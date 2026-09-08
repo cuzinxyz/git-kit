@@ -1,6 +1,6 @@
 {
   "name": "gk-dx",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Short, colorful, developer-friendly git commands. A daily-driver kit for git.",
   "keywords": [
     "git",
@@ -10,6 +10,15 @@
     "git-commands"
   ],
   "license": "MIT",
+  "author": "nhoinhoi <nhatdhu@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cuzinxyz/git-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cuzinxyz/git-kit/issues"
+  },
+  "homepage": "https://github.com/cuzinxyz/git-kit#readme",
   "type": "commonjs",
   "bin": {
     "gk": "./bin/gk.js"
@@ -18,7 +27,8 @@
   "files": [
     "bin",
     "src",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=18"

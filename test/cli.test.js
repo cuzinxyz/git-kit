@@ -12,6 +12,7 @@ function run(args, cwd, opts = {}) {
     cwd,
     encoding: "utf8",
     stdio: ["pipe", "pipe", "pipe"],
+    env: { ...process.env, GK_NO_UPDATE_CHECK: "1" },
   });
   if (opts.expectFail) {
     assert.notStrictEqual(res.status, 0, `expected failure for gk ${args.join(" ")}`);
@@ -159,4 +160,97 @@ test("gk fails cleanly outside a git repository", () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "gk-norepo-"));
   const res = run(["c", "msg"], dir, { expectFail: true });
   assert.match(res.stdout + res.stderr, /git repository/i);
+});
+
+test("gk help works even outside a git repository", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "gk-norepo-"));
+  const res = run(["help"], dir);
+  assert.match(res.stdout, /Commit/);
+  assert.match(res.stdout, /Branch/);
+});
+
+test("gk tag / gk tags / gk last-tag / gk tagd", () => {
+  const dir = makeRepo();
+  writeFile(dir, "a.txt", "1");
+  run(["c", "first"], dir);
+  run(["tag", "v1.0.0", "first release"], dir);
+  assert.match(git(["tag"], dir), /v1\.0\.0/);
+  const tags = run(["tags"], dir);
+  assert.match(tags.stdout, /v1\.0\.0/);
+  const last = run(["last-tag"], dir);
+  assert.match(last.stdout, /v1\.0\.0/);
+  run(["tagd", "v1.0.0"], dir);
+  assert.doesNotMatch(git(["tag"], dir), /v1\.0\.0/);
+});
+
+test("gk who shows the last commit touching a file", () => {
+  const dir = makeRepo();
+  writeFile(dir, "a.txt", "1");
+  run(["c", "add a"], dir);
+  const res = run(["who", "a.txt"], dir);
+  assert.match(res.stdout, /add a/);
+});
+
+test("gk find searches commit messages", () => {
+  const dir = makeRepo();
+  writeFile(dir, "a.txt", "1");
+  run(["c", "unique-marker-123"], dir);
+  const res = run(["find", "unique-marker-123"], dir);
+  assert.match(res.stdout, /unique-marker-123/);
+});
+
+test("gk contrib lists contributors", () => {
+  const dir = makeRepo();
+  writeFile(dir, "a.txt", "1");
+  run(["c", "first"], dir);
+  const res = run(["contrib"], dir);
+  assert.match(res.stdout, /GK Test/);
+});
+
+test("gk cp cherry-picks a commit", () => {
+  const dir = makeRepo();
+  writeFile(dir, "a.txt", "1");
+  run(["c", "first"], dir);
+  run(["b", "feature"], dir);
+  writeFile(dir, "b.txt", "2");
+  run(["c", "second"], dir);
+  const sha = git(["rev-parse", "HEAD"], dir).trim();
+  run(["co", "main"], dir);
+  run(["b", "target"], dir);
+  run(["cp", sha], dir);
+  assert.match(git(["log", "--oneline"], dir), /second/);
+});
+
+test("gk continue / gk abort report nothing in progress cleanly", () => {
+  const dir = makeRepo();
+  writeFile(dir, "a.txt", "1");
+  run(["c", "first"], dir);
+  const cont = run(["continue"], dir);
+  assert.match(cont.stdout, /nothing to continue/i);
+  const abort = run(["abort"], dir);
+  assert.match(abort.stdout, /nothing to abort/i);
+});
+
+test("gk ignore adds a pattern to .gitignore without duplicating it", () => {
+  const dir = makeRepo();
+  writeFile(dir, "a.txt", "1");
+  run(["c", "first"], dir);
+  run(["ignore", "node_modules"], dir);
+  run(["ignore", "node_modules"], dir);
+  const content = fs.readFileSync(path.join(dir, ".gitignore"), "utf8");
+  assert.strictEqual(content.match(/node_modules/g).length, 1);
+});
+
+test("gk alias sets and lists a git alias", () => {
+  const dir = makeRepo();
+  run(["alias", "lol", "log --oneline"], dir);
+  const res = run(["alias"], dir);
+  assert.match(res.stdout, /alias\.lol log --oneline/);
+});
+
+test("gk whoami shows the active git identity", () => {
+  const dir = makeRepo();
+  const res = run(["whoami"], dir);
+  assert.match(res.stdout, /GK Test/);
+  assert.match(res.stdout, /gk@test\.local/);
 });

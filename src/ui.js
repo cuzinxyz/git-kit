@@ -31,4 +31,12 @@ function confirm(question) {
   });
 }
 
-module.exports = { error, ok, info, hint, warn, confirm };
+async function confirmDestructive(opts, message) {
+  if (opts && opts.yes) return true;
+  if (process.stdin.isTTY) {
+    return confirm(message || "This is irreversible. Continue?");
+  }
+  return false;
+}
+
+module.exports = { error, ok, info, hint, warn, confirm, confirmDestructive };
