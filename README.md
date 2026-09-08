@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/gk-dx.svg)](https://www.npmjs.com/package/gk-dx)
 [![npm downloads](https://img.shields.io/npm/dm/gk-dx.svg)](https://www.npmjs.com/package/gk-dx)
-[![CI](https://img.shields.io/github/actions/workflow/status/cuzinxyz/git-kit/ci.yml?branch=main&label=CI)](https://github.com/cuzinxyz/git-kit/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/cuzinxyz/git-kit/ci.yml?branch=master&label=CI)](https://github.com/cuzinxyz/git-kit/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/gk-dx.svg)](LICENSE)
 
 Short, colorful, developer-friendly git commands. `gk` wraps the daily git
@@ -139,7 +139,7 @@ npm link        # use `gk` locally while developing
 
 ## CI/CD
 
-GitHub Actions run on every push/PR to `main`:
+GitHub Actions run on every push/PR to `master`:
 
 - **CI** (`.github/workflows/ci.yml`) — runs the test suite on Node 18/20/22,
   and checks the package is publish-ready (`npm pack --dry-run` + the
