@@ -1,6 +1,6 @@
 {
   "name": "gk-dx",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Short, colorful git commands for your daily workflow — commit, branch, stash, sync, tag, rebase and more, in 1-2 letters.",
   "keywords": [
     "git",
