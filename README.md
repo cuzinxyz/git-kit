@@ -1,5 +1,10 @@
 # gk — git kit
 
+[![npm version](https://img.shields.io/npm/v/gk-dx.svg)](https://www.npmjs.com/package/gk-dx)
+[![npm downloads](https://img.shields.io/npm/dm/gk-dx.svg)](https://www.npmjs.com/package/gk-dx)
+[![CI](https://img.shields.io/github/actions/workflow/status/cuzinxyz/git-kit/ci.yml?branch=main&label=CI)](https://github.com/cuzinxyz/git-kit/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/gk-dx.svg)](LICENSE)
+
 Short, colorful, developer-friendly git commands. `gk` wraps the daily git
 workflow into 1–2 letter commands so you can move faster, on any machine.
 
@@ -132,17 +137,37 @@ npm test        # integration tests against throwaway git repos
 npm link        # use `gk` locally while developing
 ```
 
+## CI/CD
+
+GitHub Actions run on every push/PR to `main`:
+
+- **CI** (`.github/workflows/ci.yml`) — runs the test suite on Node 18/20/22,
+  and checks the package is publish-ready (`npm pack --dry-run` + the
+  `package.json` version isn't already on npm).
+- **Publish** (`.github/workflows/publish.yml`) — triggered by pushing a tag
+  like `v0.2.0`. Verifies the tag matches `package.json`'s version, re-runs
+  tests, then runs `npm publish --access public`.
+
+One-time setup for publishing from CI: create an
+[npm automation token](https://www.npmjs.com/settings/~/tokens) and add it as
+a repository secret named `NPM_TOKEN` (GitHub repo → Settings → Secrets and
+variables → Actions).
+
 ## Publish
 
 ```bash
-npm test               # make sure everything passes
+npm version patch|minor|major   # bumps package.json and creates a git tag
+git push --follow-tags          # pushing the tag triggers the Publish workflow
+```
+
+Or publish manually if you'd rather not wait on CI:
+
+```bash
+npm test
 npm pack --dry-run     # sanity-check which files would be published
 npm login              # if not already logged in
 npm publish --access public
 ```
-
-Bump the version first (`npm version patch|minor|major`) for the *next*
-release — it's already at the version being shipped in this change.
 
 ## License
 

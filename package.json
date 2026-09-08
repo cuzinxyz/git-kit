@@ -1,13 +1,21 @@
 {
   "name": "gk-dx",
   "version": "0.2.0",
-  "description": "Short, colorful, developer-friendly git commands. A daily-driver kit for git.",
+  "description": "Short, colorful git commands for your daily workflow — commit, branch, stash, sync, tag, rebase and more, in 1-2 letters.",
   "keywords": [
     "git",
     "cli",
     "developer-tools",
     "productivity",
-    "git-commands"
+    "git-commands",
+    "git-cli",
+    "git-workflow",
+    "git-shortcuts",
+    "git-alias",
+    "developer-experience",
+    "dx",
+    "conventional-commits",
+    "commander"
   ],
   "license": "MIT",
   "author": "nhoinhoi <nhatdhu@gmail.com>",
